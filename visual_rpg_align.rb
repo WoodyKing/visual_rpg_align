@@ -10,8 +10,8 @@ class VisualRpgAlign
         file.each do |line|
           line.gsub!(/\t/, '  ')  # Tabs are converted to 2 spaces. Yeah, they are embedded everywhere.
           recompense = line.strip.downcase == 'else' ? -1 : 0
-          recompense = 1 if (line.downcase.include?("dclkfld") || line.downcase.include?("dclparm"))
-          recompense = 1  if block_parm
+          recompense = 1 if (line.downcase.include?("dclkfld") || line.downcase.include?("dclparm") || block_parm)
+          recompense = -1  if line.downcase.include?("when")
           indent_count-=1  if CLOSING.map { |t| line.downcase.include?(t) }.any?  unless line.strip.slice(0,2) == "//"
           if line.strip == ""
             f.puts line.strip
@@ -29,5 +29,5 @@ class VisualRpgAlign
   end
 end
 
-VisualRpgAlign.process("report.aspx.vr")
+VisualRpgAlign.process("IJA.aspx.vr")
 puts "Done"
