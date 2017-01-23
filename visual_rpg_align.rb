@@ -20,7 +20,14 @@ class VisualRpgAlign
           else
             f.puts line.strip
           end
-          indent_count+=1  if TYPES.map { |t| line.downcase.include?(t) && !(line.downcase.include?("endif")) }.any?  unless line.strip.slice(0,2) == "//"
+          unless line.strip.slice(0,2) == "//"
+            indent_count+= 1  if TYPES.map do |t| 
+              line.downcase.include?(t) && 
+              !(line.downcase.include?("endif")) && 
+              !(line.downcase.include?("selecteditem")) && 
+              !(line.downcase.include?("selectedindexchanged")) 
+            end.any? 
+          end
           block_parm = true  if line.downcase.include?("dcldiskfile")
           block_parm = false  if (line.strip == "" || line.strip.nil?)
         end
