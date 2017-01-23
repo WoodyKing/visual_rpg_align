@@ -1,5 +1,5 @@
 class VisualRpgAlign
-  TYPES = ["begclass", "begsr", "if", "select", "dowhile"]
+  TYPES = ["begclass", "begsr", "if", "select", "dowhile", "do fromval"]
   CLOSING = ["endclass", "endsr", "endif", "endsl", "enddo"]
   def self.process(file_name)
     indent_type = nil
@@ -21,11 +21,12 @@ class VisualRpgAlign
             f.puts line.strip
           end
           unless line.strip.slice(0,2) == "//"
-            indent_count+= 1  if TYPES.map do |t| 
+            indent_count+= 1  if line.downcase.include?("begsr") || TYPES.map do |t| 
               line.downcase.include?(t) && 
               !(line.downcase.include?("endif")) && 
               !(line.downcase.include?("selecteditem")) && 
-              !(line.downcase.include?("selectedindexchanged")) 
+              !(line.downcase.include?("selectedvalue")) &&
+              !(line.downcase.include?("selectedindex"))
             end.any? 
           end
           block_parm = true  if line.downcase.include?("dcldiskfile")
@@ -36,5 +37,5 @@ class VisualRpgAlign
   end
 end
 
-VisualRpgAlign.process("IJA.aspx.vr")
+VisualRpgAlign.process("default.aspx.vr")
 puts "Done"
